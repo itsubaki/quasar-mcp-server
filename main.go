@@ -48,7 +48,7 @@ func main() {
 
 		// response
 		msg := fmt.Sprintf("The prime factorization of %v is %v and %v.", resp.N, resp.P, resp.Q)
-		if resp.P == 0 && resp.Q == 0 {
+		if resp.P == 0 || resp.Q == 0 {
 			msg = strings.Join([]string{
 				"The operation failed.",
 				"Please try again.",
