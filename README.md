@@ -1,14 +1,14 @@
 # quasar-mcp-server
 
- * quasar MCP Server
- * Run code in OpenQASM format.
- * Shor's factoring algorithm
+ * Quasar MCP Server  
+ * Run code written in OpenQASM format 
+ * Implements Shor's factoring algorithm
 
 ## Running a Bell State Circuit with OpenQASM
 
 ![claude desktop](claude_desktop.png)
 
-## Install and environments
+## Installation and Environments
 
 ```shell
 go install github.com/itsubaki/quasar-mcp-server@latest
