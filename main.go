@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -26,7 +27,7 @@ func main() {
 	)
 
 	s.AddTool(
-		mcp.NewTool("factorization",
+		mcp.NewTool("Factorization",
 			mcp.WithDescription("factorize a number using shor's algorithm"),
 			mcp.WithNumber("N",
 				mcp.Required(),
@@ -62,6 +63,36 @@ func main() {
 			}
 
 			return mcp.NewToolResultText(msg), nil
+		},
+	)
+
+	s.AddTool(
+		mcp.NewTool("OpenQASMRunner",
+			mcp.WithDescription("run a quantum circuit using OpenQASM"),
+			mcp.WithString("code",
+				mcp.Required(),
+				mcp.Description("quantum circuit in OpenQASM format"),
+			),
+		),
+		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+			// parameters
+			code := req.Params.Arguments["code"].(string)
+
+			// run quantum circuit
+			resp, err := client.
+				New(BaseURL, IdentityToken).
+				Run(ctx, code)
+			if err != nil {
+				return nil, fmt.Errorf("run: %w", err)
+			}
+
+			// response
+			bytes, err := json.Marshal(resp)
+			if err != nil {
+				return nil, fmt.Errorf("json marshal: %w", err)
+			}
+
+			return mcp.NewToolResultText(string(bytes)), nil
 		},
 	)
 
