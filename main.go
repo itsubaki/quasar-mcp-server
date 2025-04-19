@@ -87,9 +87,9 @@ func main() {
 			}
 
 			// response
-			bytes, err := json.Marshal(resp)
+			bytes, err := json.MarshalIndent(resp, "", " ")
 			if err != nil {
-				return nil, fmt.Errorf("json marshal: %w", err)
+				return nil, fmt.Errorf("marshal indent: %w", err)
 			}
 
 			return mcp.NewToolResultText(string(bytes)), nil
