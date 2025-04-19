@@ -7,6 +7,10 @@
 
 ![claude desktop](claude_desktop.png)
 
+## Factoring 85 with Shor's Algorithm
+
+![claude desktop](claude_desktop_shor.png)
+
 ## Installation and Environments
 
 ```shell
