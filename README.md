@@ -2,7 +2,6 @@
 
  * quasar MCP Server  
  * Run code written in OpenQASM format 
- * Implements Shor's factoring algorithm
 
 ## Running a Bell State Circuit with OpenQASM
 
