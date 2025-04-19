@@ -35,8 +35,7 @@ func main() {
 
 	s.AddTool(tool, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		// parameters
-		N := int(req.Params.Arguments["N"].(float64))
-		t, a := 3, 2
+		N, t, a := int(req.Params.Arguments["N"].(float64)), 3, 2
 		var seed uint64
 
 		// factorization
