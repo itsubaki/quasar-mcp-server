@@ -41,7 +41,7 @@ func main() {
 		// factorization
 		resp, err := client.
 			New(BaseURL, IdentityToken).
-			Factorize(context.Background(), N, t, a, seed)
+			Factorize(ctx, N, t, a, seed)
 		if err != nil {
 			return nil, fmt.Errorf("factorize: %w", err)
 		}
