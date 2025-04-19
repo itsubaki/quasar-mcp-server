@@ -19,11 +19,41 @@ var (
 
 func main() {
 	s := server.NewMCPServer(
-		"quasar",
+		"quasar-mcp-server",
 		"0.0.1",
 		server.WithResourceCapabilities(true, true),
 		server.WithLogging(),
 		server.WithRecovery(),
+	)
+
+	s.AddTool(
+		mcp.NewTool("OpenQASMRunner",
+			mcp.WithDescription("run a quantum circuit using OpenQASM"),
+			mcp.WithString("code",
+				mcp.Required(),
+				mcp.Description("quantum circuit in OpenQASM format"),
+			),
+		),
+		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+			// parameters
+			code := req.Params.Arguments["code"].(string)
+
+			// run quantum circuit
+			resp, err := client.
+				New(BaseURL, IdentityToken).
+				Run(ctx, code)
+			if err != nil {
+				return nil, fmt.Errorf("run: %w", err)
+			}
+
+			// response
+			bytes, err := json.MarshalIndent(resp, "", " ")
+			if err != nil {
+				return nil, fmt.Errorf("marshal indent: %w", err)
+			}
+
+			return mcp.NewToolResultText(string(bytes)), nil
+		},
 	)
 
 	s.AddTool(
@@ -63,36 +93,6 @@ func main() {
 			}
 
 			return mcp.NewToolResultText(msg), nil
-		},
-	)
-
-	s.AddTool(
-		mcp.NewTool("OpenQASMRunner",
-			mcp.WithDescription("run a quantum circuit using OpenQASM"),
-			mcp.WithString("code",
-				mcp.Required(),
-				mcp.Description("quantum circuit in OpenQASM format"),
-			),
-		),
-		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			// parameters
-			code := req.Params.Arguments["code"].(string)
-
-			// run quantum circuit
-			resp, err := client.
-				New(BaseURL, IdentityToken).
-				Run(ctx, code)
-			if err != nil {
-				return nil, fmt.Errorf("run: %w", err)
-			}
-
-			// response
-			bytes, err := json.MarshalIndent(resp, "", " ")
-			if err != nil {
-				return nil, fmt.Errorf("marshal indent: %w", err)
-			}
-
-			return mcp.NewToolResultText(string(bytes)), nil
 		},
 	)
 
