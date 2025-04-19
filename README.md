@@ -1,6 +1,6 @@
 # quasar-mcp-server
 
- * Quasar MCP Server  
+ * quasar MCP Server  
  * Run code written in OpenQASM format 
  * Implements Shor's factoring algorithm
 
