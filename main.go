@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"strings"
 
@@ -93,6 +95,72 @@ func main() {
 			}
 
 			return mcp.NewToolResultText(msg), nil
+		},
+	)
+
+	s.AddResource(
+		mcp.NewResource(
+			"https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Lexer.g4",
+			"OpenQASM3Lexer",
+			mcp.WithResourceDescription("The OpenQASM3Lexer grammar file"),
+			mcp.WithMIMEType("text"),
+		),
+		func(ctx context.Context, request mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
+			resp, err := http.Get("https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Lexer.g4")
+			if err != nil {
+				return nil, fmt.Errorf("get: %w", err)
+			}
+			defer resp.Body.Close()
+
+			if resp.StatusCode != http.StatusOK {
+				return nil, fmt.Errorf("status code: %d", resp.StatusCode)
+			}
+
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, fmt.Errorf("read all: %w", err)
+			}
+
+			return []mcp.ResourceContents{
+				mcp.TextResourceContents{
+					URI:      "https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Lexer.g4",
+					MIMEType: "text",
+					Text:     string(body),
+				},
+			}, nil
+		},
+	)
+
+	s.AddResource(
+		mcp.NewResource(
+			"https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Parser.g4",
+			"OpenQASM3Parser",
+			mcp.WithResourceDescription("The OpenQASM3Parser grammar file"),
+			mcp.WithMIMEType("text"),
+		),
+		func(ctx context.Context, request mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
+			resp, err := http.Get("https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Parser.g4")
+			if err != nil {
+				return nil, fmt.Errorf("get: %w", err)
+			}
+			defer resp.Body.Close()
+
+			if resp.StatusCode != http.StatusOK {
+				return nil, fmt.Errorf("status code: %d", resp.StatusCode)
+			}
+
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, fmt.Errorf("read all: %w", err)
+			}
+
+			return []mcp.ResourceContents{
+				mcp.TextResourceContents{
+					URI:      "https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Parser.g4",
+					MIMEType: "text",
+					Text:     string(body),
+				},
+			}, nil
 		},
 	)
 
