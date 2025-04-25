@@ -4,7 +4,7 @@ go 1.24.2
 
 require (
 	github.com/itsubaki/quasar v0.0.0-20250420121742-5bffedf6eece
-	github.com/mark3labs/mcp-go v0.22.0
+	github.com/mark3labs/mcp-go v0.23.1
 )
 
 require (
