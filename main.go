@@ -17,22 +17,23 @@ import (
 
 var (
 	BaseURL       = os.Getenv("BASE_URL")
-	IdentityToken = func() string {
-		token := os.Getenv("IDENTITY_TOKEN")
-		if token != "" {
-			return token
-		}
-
-		path := os.Getenv("GCLOUD_PATH")
-		cmd := exec.Command(path, "auth", "print-identity-token")
-		out, err := cmd.Output()
-		if err != nil {
-			panic(err)
-		}
-
-		return strings.TrimSpace(string(out))
-	}()
+	IdentityToken = os.Getenv("IDENTITY_TOKEN")
 )
+
+func GetIdentityToken() (string, error) {
+	if IdentityToken != "" {
+		return IdentityToken, nil
+	}
+
+	path := os.Getenv("GCLOUD_PATH")
+	cmd := exec.Command(path, "auth", "print-identity-token")
+	out, err := cmd.Output()
+	if err != nil {
+		return "", fmt.Errorf("print identity token: %w", err)
+	}
+
+	return strings.TrimSpace(string(out)), nil
+}
 
 func main() {
 	s := server.NewMCPServer(
@@ -55,9 +56,15 @@ func main() {
 			// parameters
 			code := req.Params.Arguments["code"].(string)
 
+			// auth
+			token, err := GetIdentityToken()
+			if err != nil {
+				return nil, fmt.Errorf("get identity token: %w", err)
+			}
+
 			// run quantum circuit
 			resp, err := client.
-				New(BaseURL, IdentityToken).
+				New(BaseURL, token).
 				Run(ctx, code)
 			if err != nil {
 				return nil, fmt.Errorf("run: %w", err)
@@ -87,33 +94,37 @@ func main() {
 			t, a := 4, -1
 			var seed uint64
 
+			// auth
+			token, err := GetIdentityToken()
+			if err != nil {
+				return nil, fmt.Errorf("get identity token: %w", err)
+			}
+
 			// factorization
 			resp, err := client.
-				New(BaseURL, IdentityToken).
+				New(BaseURL, token).
 				Factorize(ctx, N, t, a, seed)
 			if err != nil {
 				return nil, fmt.Errorf("factorize: %w", err)
 			}
 
 			// response
-			msg := strings.Join([]string{
-				fmt.Sprintf("The prime factorization of %v is %v and %v.", resp.N, resp.P, resp.Q),
-				fmt.Sprintf("num of precision qubits=%v, coprime number of N=%v, PRNG seed=%v, measured bitstring=%v, s/r=%v", resp.T, resp.A, resp.Seed, resp.M, resp.SR),
-			}, "\n")
+			if resp.Message != "" {
+				return mcp.NewToolResultText(resp.Message), nil
+			}
 
 			if resp.P == 0 || resp.Q == 0 {
-				msg = strings.Join([]string{
+				return mcp.NewToolResultText(strings.Join([]string{
 					"The operation failed.",
 					"Please try again.",
 					"Since quantum computation rely on probabilistic algorithms, correct results are not always guaranteed.",
-				}, "\n")
+				}, "\n")), nil
 			}
 
-			if resp.Message != "" {
-				msg = resp.Message
-			}
-
-			return mcp.NewToolResultText(msg), nil
+			return mcp.NewToolResultText(strings.Join([]string{
+				fmt.Sprintf("The prime factorization of %v is %v and %v.", resp.N, resp.P, resp.Q),
+				fmt.Sprintf("num of precision qubits=%v, coprime number of N=%v, PRNG seed=%v, measured bitstring=%v, s/r=%v", resp.T, resp.A, resp.Seed, resp.M, resp.SR),
+			}, "\n")), nil
 		},
 	)
 
