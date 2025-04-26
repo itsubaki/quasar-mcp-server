@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/itsubaki/quasar/client"
@@ -16,7 +17,21 @@ import (
 
 var (
 	BaseURL       = os.Getenv("BASE_URL")
-	IdentityToken = os.Getenv("IDENTITY_TOKEN")
+	IdentityToken = func() string {
+		token := os.Getenv("IDENTITY_TOKEN")
+		if token != "" {
+			return token
+		}
+
+		path := os.Getenv("GCLOUD_PATH")
+		cmd := exec.Command(path, "auth", "print-identity-token")
+		out, err := cmd.Output()
+		if err != nil {
+			panic(err)
+		}
+
+		return strings.TrimSpace(string(out))
+	}()
 )
 
 func main() {
@@ -92,6 +107,10 @@ func main() {
 					"Please try again.",
 					"Since quantum computation rely on probabilistic algorithms, correct results are not always guaranteed.",
 				}, "\n")
+			}
+
+			if resp.Message != "" {
+				msg = resp.Message
 			}
 
 			return mcp.NewToolResultText(msg), nil
