@@ -45,11 +45,11 @@ func main() {
 	)
 
 	s.AddTool(
-		mcp.NewTool("OpenQASMRunner",
-			mcp.WithDescription("run a quantum circuit using OpenQASM"),
+		mcp.NewTool("OpenQASM3p0Runner",
+			mcp.WithDescription("run a quantum circuit using OpenQASM 3.0"),
 			mcp.WithString("code",
 				mcp.Required(),
-				mcp.Description("quantum circuit in OpenQASM format"),
+				mcp.Description("quantum circuit in OpenQASM 3.0 format"),
 			),
 		),
 		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
