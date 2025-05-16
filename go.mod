@@ -3,8 +3,8 @@ module github.com/itsubaki/quasar-mcp-server
 go 1.24.2
 
 require (
-	github.com/itsubaki/quasar v0.0.0-20250510132906-01d886dfd697
-	github.com/mark3labs/mcp-go v0.26.0
+	github.com/itsubaki/quasar v0.0.0-20250516160508-f1a6964e6df6
+	github.com/mark3labs/mcp-go v0.27.1
 )
 
 require (
