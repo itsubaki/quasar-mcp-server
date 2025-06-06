@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 
 	"github.com/itsubaki/quasar/client"
@@ -54,7 +55,15 @@ func main() {
 		),
 		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 			// parameters
-			code := req.Params.Arguments["code"].(string)
+			argCode, ok := req.GetArguments()["code"]
+			if !ok {
+				return nil, fmt.Errorf("missing required argument")
+			}
+
+			code, ok := argCode.(string)
+			if !ok {
+				return nil, fmt.Errorf("invalid type for code(%T) argument", code)
+			}
 
 			// auth
 			token, err := GetIdentityToken()
@@ -83,16 +92,53 @@ func main() {
 	s.AddTool(
 		mcp.NewTool("Factorization",
 			mcp.WithDescription("factorize a number using shor's algorithm"),
-			mcp.WithNumber("N",
+			mcp.WithString("N",
 				mcp.Required(),
-				mcp.Description("the number to factorize (integer)"),
+				mcp.Description("the number to factorize (string representation of an integer)"),
+			),
+			mcp.WithString("t",
+				mcp.DefaultString("4"),
+				mcp.Description("number of precision qubits (default: 4)"),
+			),
+			mcp.WithString("a",
+				mcp.DefaultString("-1"),
+				mcp.Description("coprime number of N (default: -1, which means a random coprime number will be chosen)"),
+			),
+			mcp.WithString("seed",
+				mcp.DefaultString("0"),
+				mcp.Description("PRNG seed (default: 0, which means a random seed will be chosen)"),
 			),
 		),
 		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+			getParams := func(name ...string) ([]int, error) {
+				out := make([]int, len(name))
+				for i, n := range name {
+					arg, ok := req.GetArguments()[n]
+					if !ok {
+						return nil, fmt.Errorf("missing required argument: %v", name)
+					}
+
+					str, ok := arg.(string)
+					if !ok {
+						return nil, fmt.Errorf("invalid type for %v(%T) argument", name, arg)
+					}
+
+					v, err := strconv.Atoi(str)
+					if err != nil {
+						return nil, fmt.Errorf("convert %v to int: %w", name, err)
+					}
+
+					out[i] = v
+				}
+
+				return out, nil
+			}
+
 			// parameters
-			N := int(req.Params.Arguments["N"].(float64))
-			t, a := 4, -1
-			var seed uint64
+			params, err := getParams("N", "t", "a", "seed")
+			if err != nil {
+				return nil, fmt.Errorf("get parameters: %w", err)
+			}
 
 			// auth
 			token, err := GetIdentityToken()
@@ -100,31 +146,40 @@ func main() {
 				return nil, fmt.Errorf("get identity token: %w", err)
 			}
 
-			// factorization
-			resp, err := client.
-				New(BaseURL, token).
-				Factorize(ctx, N, t, a, seed)
-			if err != nil {
-				return nil, fmt.Errorf("factorize: %w", err)
-			}
+			N, t, a, seed := params[0], min(params[1], 4), params[2], params[3]
+			for range 10 {
+				// factorization
+				resp, err := client.
+					New(BaseURL, token).
+					Factorize(ctx, N, t, a, uint64(seed))
+				if err != nil {
+					return nil, fmt.Errorf("factorize: %w", err)
+				}
 
-			// response
-			if resp.Message != "" {
-				return mcp.NewToolResultText(resp.Message), nil
-			}
+				if resp.P == 0 || resp.Q == 0 {
+					// no factorization found
+					continue
+				}
 
-			if resp.P == 0 || resp.Q == 0 {
+				// response
+				if resp.Message != "" {
+					// somthing went wrong
+					return mcp.NewToolResultText(resp.Message), nil
+				}
+
+				// success
 				return mcp.NewToolResultText(strings.Join([]string{
-					"The operation failed.",
-					"Please try again.",
-					"Since quantum computation rely on probabilistic algorithms, correct results are not always guaranteed.",
-				}, "\n")), nil
+					fmt.Sprintf("The prime factorization of %v is %v and %v.", resp.N, resp.P, resp.Q),
+					fmt.Sprintf("num of precision qubits=%v, coprime number of N=%v, PRNG seed=%v, measured bitstring=%v, s/r=%v.", resp.T, resp.A, resp.Seed, resp.M, resp.SR),
+				}, "")), nil
 			}
 
+			// failed
 			return mcp.NewToolResultText(strings.Join([]string{
-				fmt.Sprintf("The prime factorization of %v is %v and %v.", resp.N, resp.P, resp.Q),
-				fmt.Sprintf("num of precision qubits=%v, coprime number of N=%v, PRNG seed=%v, measured bitstring=%v, s/r=%v", resp.T, resp.A, resp.Seed, resp.M, resp.SR),
-			}, "\n")), nil
+				"The operation failed.",
+				"Please try again.",
+				"Since quantum computation rely on probabilistic algorithms, correct results are not always guaranteed.",
+			}, "")), nil
 		},
 	)
 
