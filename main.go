@@ -7,33 +7,27 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 
 	"github.com/itsubaki/quasar/client"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
+	"google.golang.org/api/idtoken"
 )
 
 var (
-	BaseURL       = os.Getenv("BASE_URL")
-	IdentityToken = os.Getenv("IDENTITY_TOKEN")
+	TargetURL = os.Getenv("TARGET_URL")
+	Port      = os.Getenv("PORT")
 )
 
-func GetIdentityToken() (string, error) {
-	if IdentityToken != "" {
-		return IdentityToken, nil
-	}
-
-	path := os.Getenv("GCLOUD_PATH")
-	cmd := exec.Command(path, "auth", "print-identity-token")
-	out, err := cmd.Output()
+func NewQuasarClient(ctx context.Context) (*client.Client, error) {
+	clientWithToken, err := idtoken.NewClient(ctx, TargetURL)
 	if err != nil {
-		return "", fmt.Errorf("print identity token: %w", err)
+		return nil, fmt.Errorf("new client: %w", err)
 	}
 
-	return strings.TrimSpace(string(out)), nil
+	return client.NewWithClient(TargetURL, clientWithToken), nil
 }
 
 func main() {
@@ -46,7 +40,7 @@ func main() {
 	)
 
 	s.AddTool(
-		mcp.NewTool("OpenQASM3p0Runner",
+		mcp.NewTool("openqasm3p0_run",
 			mcp.WithDescription("run a quantum circuit using OpenQASM 3.0"),
 			mcp.WithString("code",
 				mcp.Required(),
@@ -65,16 +59,14 @@ func main() {
 				return nil, fmt.Errorf("invalid type for code(%T) argument", code)
 			}
 
-			// auth
-			token, err := GetIdentityToken()
+			// client
+			client, err := NewQuasarClient(ctx)
 			if err != nil {
-				return nil, fmt.Errorf("get identity token: %w", err)
+				return nil, fmt.Errorf("new client: %w", err)
 			}
 
 			// run quantum circuit
-			resp, err := client.
-				New(BaseURL, token).
-				Run(ctx, code)
+			resp, err := client.Run(ctx, code)
 			if err != nil {
 				return nil, fmt.Errorf("run: %w", err)
 			}
@@ -90,7 +82,7 @@ func main() {
 	)
 
 	s.AddTool(
-		mcp.NewTool("Factorization",
+		mcp.NewTool("factorize",
 			mcp.WithDescription("factorize a number using shor's algorithm"),
 			mcp.WithString("N",
 				mcp.Required(),
@@ -143,18 +135,16 @@ func main() {
 				return nil, fmt.Errorf("get parameters: %w", err)
 			}
 
-			// auth
-			token, err := GetIdentityToken()
+			// client
+			client, err := NewQuasarClient(ctx)
 			if err != nil {
-				return nil, fmt.Errorf("get identity token: %w", err)
+				return nil, fmt.Errorf("new client: %w", err)
 			}
 
 			N, t, a, seed := params[0], min(params[1], 4), params[2], params[3]
 			for range 10 {
 				// factorization
-				resp, err := client.
-					New(BaseURL, token).
-					Factorize(ctx, N, t, a, uint64(seed))
+				resp, err := client.Factorize(ctx, N, t, a, uint64(seed))
 				if err != nil {
 					return nil, fmt.Errorf("factorize: %w", err)
 				}
@@ -189,7 +179,7 @@ func main() {
 	s.AddResource(
 		mcp.NewResource(
 			"https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Lexer.g4",
-			"OpenQASM3Lexer",
+			"openqasm3p0_lexer",
 			mcp.WithResourceDescription("The OpenQASM3Lexer grammar file"),
 			mcp.WithMIMEType("text"),
 		),
@@ -222,7 +212,7 @@ func main() {
 	s.AddResource(
 		mcp.NewResource(
 			"https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Parser.g4",
-			"OpenQASM3Parser",
+			"openqasm3p0_parser",
 			mcp.WithResourceDescription("The OpenQASM3Parser grammar file"),
 			mcp.WithMIMEType("text"),
 		),
@@ -253,7 +243,12 @@ func main() {
 	)
 
 	// start
-	if err := server.ServeStdio(s); err != nil {
+	if Port == "" {
+		Port = "8080"
+	}
+	addr := fmt.Sprintf(":%s", Port)
+
+	if err := server.NewStreamableHTTPServer(s).Start(addr); err != nil {
 		panic(err)
 	}
 }
