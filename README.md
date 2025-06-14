@@ -14,12 +14,23 @@
 ## Installation and Environments
 
  1. Deploy [quasar](https://github.com/itsubaki/quasar) to Cloud Run.
- 1. Install the `quasar-mcp-server`.
- 1. Set the URL and TOKEN in the mcp server configuration.
+ 1. Deploy quasar-mcp-server to Cloud Run.
+ 1. Configure `settings.json`.
 
 ```shell
-go install github.com/itsubaki/quasar-mcp-server@latest
-gcloud run services describe ${SERVICE_NAME} --project ${PROJECT_ID} --format 'value(status.url)'
-gcloud auth print-identity-token
+$ make build
+$ make deploy
 ```
 
+```json
+{
+    "mcp": {
+        "servers": {
+            "quasar": {
+                "type": "http",
+                "url": "https://${YOUR_CLOUD_RUN_SERVICE_URL}.run.app/mcp",
+            }
+        }
+    }
+}
+```
