@@ -34,3 +34,25 @@ $ make deploy
     }
 }
 ```
+
+## Invoke an Authenticated Cloud Run Service from localhost
+
+```shell
+$ gcloud run services proxy quasar-mcp-server --region asia-northeast1
+
+...
+Proxying to Cloud Run service [quasar-mcp-server] in project [${PROJECT_ID}] region [asia-northeast1]
+http://127.0.0.1:3000 proxies to https://${YOUR_CLOUD_RUN_URL}.run.app
+```
+
+```json
+{
+    "mcp": {
+        "servers": {
+            "quasar": {
+                "type": "http",
+                "url": "http://127.0.0.1:3000/mcp",
+            }
+        }
+    }
+}
