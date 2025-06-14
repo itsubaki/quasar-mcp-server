@@ -7,11 +7,11 @@
 
 ### Running a Bell State Circuit with OpenQASM
 
-![claude desktop](claude_desktop.png)
+![GitHub Copilot](copilot_run.png)
 
 ### Factoring with Shor's Algorithm
 
-![claude desktop](claude_desktop_shor.png)
+![GitHub Copilot](copilot_factorize.png)
 
 ## Deployment and Configuration
 
