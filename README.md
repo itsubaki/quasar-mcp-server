@@ -3,15 +3,17 @@
  * quasar MCP Server  
  * Run code written in OpenQASM format 
 
-## Running a Bell State Circuit with OpenQASM
+## Examples
+
+### Running a Bell State Circuit with OpenQASM
 
 ![claude desktop](claude_desktop.png)
 
-## Factoring with Shor's Algorithm
+### Factoring with Shor's Algorithm
 
 ![claude desktop](claude_desktop_shor.png)
 
-## Installation and Environments
+## Deployment and Configuration
 
  1. Deploy [quasar](https://github.com/itsubaki/quasar) to Cloud Run.
  1. Deploy quasar-mcp-server to Cloud Run.
