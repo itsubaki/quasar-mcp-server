@@ -20,8 +20,7 @@
  1. Configure `settings.json`.
 
 ```shell
-$ make build
-$ make deploy
+$ make build deploy
 ```
 
 ```json
@@ -40,9 +39,9 @@ $ make deploy
 ## Invoke an Authenticated Cloud Run Service from localhost
 
 ```shell
-$ gcloud run services proxy quasar-mcp-server --region asia-northeast1
-
+$ make proxy
 ...
+
 Proxying to Cloud Run service [quasar-mcp-server] in project [${PROJECT_ID}] region [asia-northeast1]
 http://127.0.0.1:3000 proxies to https://${YOUR_CLOUD_RUN_URL}.run.app
 ```

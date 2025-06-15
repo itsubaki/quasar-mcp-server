@@ -16,18 +16,49 @@ import (
 	"google.golang.org/api/idtoken"
 )
 
-var (
-	TargetURL = os.Getenv("TARGET_URL")
-	Port      = os.Getenv("PORT")
+const (
+	lexerURL  = "https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Lexer.g4"
+	parserURL = "https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Parser.g4"
 )
 
-func NewClient(ctx context.Context) (*client.Client, error) {
-	httpClient, err := idtoken.NewClient(ctx, TargetURL)
+var (
+	targetURL = os.Getenv("TARGET_URL")
+	addr      = func() string {
+		port := os.Getenv("PORT")
+		if port == "" {
+			return ":8080"
+		}
+
+		return fmt.Sprintf(":%s", port)
+	}()
+)
+
+func newQuasarClient(ctx context.Context) (*client.Client, error) {
+	httpClient, err := idtoken.NewClient(ctx, targetURL)
 	if err != nil {
-		return nil, fmt.Errorf("new http client: %w", err)
+		return nil, fmt.Errorf("new quasar client: %w", err)
 	}
 
-	return client.New(TargetURL, httpClient), nil
+	return client.New(targetURL, httpClient), nil
+}
+
+func httpGet(url string) ([]byte, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, fmt.Errorf("get: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("status code: %d", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("read all: %w", err)
+	}
+
+	return body, nil
 }
 
 func main() {
@@ -60,7 +91,7 @@ func main() {
 			}
 
 			// client
-			client, err := NewClient(ctx)
+			client, err := newQuasarClient(ctx)
 			if err != nil {
 				return nil, fmt.Errorf("new client: %w", err)
 			}
@@ -136,7 +167,7 @@ func main() {
 			}
 
 			// client
-			client, err := NewClient(ctx)
+			client, err := newQuasarClient(ctx)
 			if err != nil {
 				return nil, fmt.Errorf("new client: %w", err)
 			}
@@ -169,41 +200,31 @@ func main() {
 
 			// failed
 			return mcp.NewToolResultText(strings.Join([]string{
-				"The operation failed.",
+				"Unfortunately, the operation failed.",
+				"Because Shor's algorithm is probabilistic, this can occasionally happen.",
 				"Please try again.",
-				"Since quantum computation rely on probabilistic algorithms, correct results are not always guaranteed.",
-			}, "")), nil
+			}, " ")), nil
 		},
 	)
 
 	s.AddResource(
 		mcp.NewResource(
-			"https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Lexer.g4",
+			lexerURL,
 			"openqasm3p0_lexer",
-			mcp.WithResourceDescription("The OpenQASM3Lexer grammar file"),
+			mcp.WithResourceDescription("The OpenQASM3.0 Lexer grammar"),
 			mcp.WithMIMEType("text"),
 		),
 		func(ctx context.Context, request mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
-			resp, err := http.Get("https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Lexer.g4")
+			body, err := httpGet(lexerURL)
 			if err != nil {
 				return nil, fmt.Errorf("get: %w", err)
-			}
-			defer resp.Body.Close()
-
-			if resp.StatusCode != http.StatusOK {
-				return nil, fmt.Errorf("status code: %d", resp.StatusCode)
-			}
-
-			body, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, fmt.Errorf("read all: %w", err)
 			}
 
 			return []mcp.ResourceContents{
 				mcp.TextResourceContents{
-					URI:      "https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Lexer.g4",
-					MIMEType: "text",
+					URI:      lexerURL,
 					Text:     string(body),
+					MIMEType: "text",
 				},
 			}, nil
 		},
@@ -211,43 +232,28 @@ func main() {
 
 	s.AddResource(
 		mcp.NewResource(
-			"https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Parser.g4",
+			parserURL,
 			"openqasm3p0_parser",
-			mcp.WithResourceDescription("The OpenQASM3Parser grammar file"),
+			mcp.WithResourceDescription("The OpenQASM3.0 Parser grammar"),
 			mcp.WithMIMEType("text"),
 		),
 		func(ctx context.Context, request mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
-			resp, err := http.Get("https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Parser.g4")
+			body, err := httpGet(parserURL)
 			if err != nil {
 				return nil, fmt.Errorf("get: %w", err)
-			}
-			defer resp.Body.Close()
-
-			if resp.StatusCode != http.StatusOK {
-				return nil, fmt.Errorf("status code: %d", resp.StatusCode)
-			}
-
-			body, err := io.ReadAll(resp.Body)
-			if err != nil {
-				return nil, fmt.Errorf("read all: %w", err)
 			}
 
 			return []mcp.ResourceContents{
 				mcp.TextResourceContents{
-					URI:      "https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/main/qasm3Parser.g4",
-					MIMEType: "text",
+					URI:      parserURL,
 					Text:     string(body),
+					MIMEType: "text",
 				},
 			}, nil
 		},
 	)
 
 	// start
-	if Port == "" {
-		Port = "8080"
-	}
-	addr := fmt.Sprintf(":%s", Port)
-
 	if err := server.NewStreamableHTTPServer(s).Start(addr); err != nil {
 		panic(err)
 	}
