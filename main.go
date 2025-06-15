@@ -105,9 +105,9 @@ func main() {
 			),
 		),
 		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			getParams := func(name ...string) ([]int, error) {
-				out := make([]int, len(name))
-				for i, n := range name {
+			getParams := func(name ...string) (map[string]int, error) {
+				params := make(map[string]int)
+				for _, n := range name {
 					arg, ok := req.GetArguments()[n]
 					if !ok {
 						return nil, fmt.Errorf("missing required argument: %v", name)
@@ -123,10 +123,10 @@ func main() {
 						return nil, fmt.Errorf("convert %v to int: %w", name, err)
 					}
 
-					out[i] = v
+					params[n] = v
 				}
 
-				return out, nil
+				return params, nil
 			}
 
 			// parameters
@@ -141,7 +141,7 @@ func main() {
 				return nil, fmt.Errorf("new client: %w", err)
 			}
 
-			N, t, a, seed := params[0], min(params[1], 4), params[2], params[3]
+			N, t, a, seed := params["N"], min(params["t"], 4), params["a"], params["seed"]
 			for range 10 {
 				// factorization
 				resp, err := client.Factorize(ctx, N, t, a, uint64(seed))
