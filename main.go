@@ -21,13 +21,13 @@ var (
 	Port      = os.Getenv("PORT")
 )
 
-func NewQuasarClient(ctx context.Context) (*client.Client, error) {
-	clientWithToken, err := idtoken.NewClient(ctx, TargetURL)
+func NewClient(ctx context.Context) (*client.Client, error) {
+	httpClient, err := idtoken.NewClient(ctx, TargetURL)
 	if err != nil {
-		return nil, fmt.Errorf("new client: %w", err)
+		return nil, fmt.Errorf("new http client: %w", err)
 	}
 
-	return client.NewWithClient(TargetURL, clientWithToken), nil
+	return client.New(TargetURL, httpClient), nil
 }
 
 func main() {
@@ -60,7 +60,7 @@ func main() {
 			}
 
 			// client
-			client, err := NewQuasarClient(ctx)
+			client, err := NewClient(ctx)
 			if err != nil {
 				return nil, fmt.Errorf("new client: %w", err)
 			}
@@ -136,7 +136,7 @@ func main() {
 			}
 
 			// client
-			client, err := NewQuasarClient(ctx)
+			client, err := NewClient(ctx)
 			if err != nil {
 				return nil, fmt.Errorf("new client: %w", err)
 			}
