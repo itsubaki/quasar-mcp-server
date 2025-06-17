@@ -8,6 +8,7 @@ IMAGE := ${REGION}-docker.pkg.dev/${PROJECT_ID}/${SERVICE_NAME}/app
 TAG := latest
 
 update:
+	GOPROXY=direct go get github.com/itsubaki/quasar@HEAD
 	go get -u ./...
 	go mod tidy
 
