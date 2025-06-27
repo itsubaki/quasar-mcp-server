@@ -97,9 +97,9 @@ func main() {
 			}
 
 			// run quantum circuit
-			resp, err := client.Run(ctx, code)
+			resp, err := client.Simulate(ctx, code)
 			if err != nil {
-				return nil, fmt.Errorf("run: %w", err)
+				return nil, fmt.Errorf("simulate: %w", err)
 			}
 
 			// response
@@ -186,9 +186,9 @@ func main() {
 				}
 
 				// response
-				if resp.Message != "" {
+				if resp.Message != nil {
 					// somthing went wrong
-					return mcp.NewToolResultText(resp.Message), nil
+					return mcp.NewToolResultText(*resp.Message), nil
 				}
 
 				// success
