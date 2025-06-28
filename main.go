@@ -141,8 +141,8 @@ func main() {
 			),
 		),
 		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			getParams := func(name ...string) (map[string]int, error) {
-				params := make(map[string]int)
+			getParams := func(name ...string) (map[string]uint64, error) {
+				params := make(map[string]uint64)
 				for _, n := range name {
 					arg, ok := req.GetArguments()[n]
 					if !ok {
@@ -154,9 +154,9 @@ func main() {
 						return nil, fmt.Errorf("invalid type for %v(%T) argument", name, arg)
 					}
 
-					v, err := strconv.Atoi(str)
+					v, err := strconv.ParseUint(str, 10, 64)
 					if err != nil {
-						return nil, fmt.Errorf("convert %v to int: %w", name, err)
+						return nil, fmt.Errorf("convert %v to uint64: %w", name, err)
 					}
 
 					params[n] = v
@@ -180,7 +180,7 @@ func main() {
 			N, t, a, seed := params["N"], min(params["t"], 4), params["a"], params["seed"]
 			for range 10 {
 				// factorization
-				resp, err := client.Factorize(ctx, N, t, a, uint64(seed))
+				resp, err := client.Factorize(ctx, N, &t, &a, &seed)
 				if err != nil {
 					return nil, fmt.Errorf("factorize: %w", err)
 				}

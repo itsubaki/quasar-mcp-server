@@ -29,8 +29,8 @@ github.com/googleapis/enterprise-certificate-proxy v0.3.6 h1:GW/XbdyBFQ8Qe+YAmFU
 github.com/googleapis/enterprise-certificate-proxy v0.3.6/go.mod h1:MkHOF77EYAE7qfSuSS9PU6g4Nt4e11cnsDUowfwewLA=
 github.com/googleapis/gax-go/v2 v2.14.2 h1:eBLnkZ9635krYIPD+ag1USrOAI0Nr0QYF3+/3GqO0k0=
 github.com/googleapis/gax-go/v2 v2.14.2/go.mod h1:ON64QhlJkhVtSqp4v1uaK92VyZ2gmvDQsweuyLV+8+w=
-github.com/itsubaki/quasar v0.0.0-20250627103143-62213e5ecb2b h1:5/1y6AuB21XRw9ql8hCja+S8As7OrQQ4Ii4IiksXUFI=
-github.com/itsubaki/quasar v0.0.0-20250627103143-62213e5ecb2b/go.mod h1:HsoLgU56CHAF+c2pgPHM7jb9iC6fWZKeSurYb33X/BE=
+github.com/itsubaki/quasar v0.0.0-20250628095920-1792a2b77952 h1:LIk4BDPph2U5XRPRC70V09EThS61zL/ttINMl58xZRI=
+github.com/itsubaki/quasar v0.0.0-20250628095920-1792a2b77952/go.mod h1:HsoLgU56CHAF+c2pgPHM7jb9iC6fWZKeSurYb33X/BE=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
 github.com/kr/pretty v0.3.1/go.mod h1:hoEshYVHaxMs3cyo3Yncou5ZscifuDolrwPKZanG3xk=
 github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=
