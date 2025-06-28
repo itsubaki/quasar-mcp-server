@@ -22,8 +22,9 @@ const (
 )
 
 var (
-	targetURL = os.Getenv("TARGET_URL")
-	addr      = func() string {
+	identityToken = os.Getenv("IDENTITY_TOKEN")
+	targetURL     = os.Getenv("TARGET_URL")
+	addr          = func() string {
 		port := os.Getenv("PORT")
 		if port == "" {
 			return ":8080"
@@ -34,6 +35,10 @@ var (
 )
 
 func newQuasarClient(ctx context.Context) (*client.Client, error) {
+	if identityToken != "" {
+		return client.New(targetURL, client.NewWithIdentityToken(identityToken)), nil
+	}
+
 	httpClient, err := idtoken.NewClient(ctx, targetURL)
 	if err != nil {
 		return nil, fmt.Errorf("new quasar client: %w", err)
@@ -126,8 +131,8 @@ func main() {
 			),
 			mcp.WithString("a",
 				mcp.Required(),
-				mcp.DefaultString("-1"),
-				mcp.Description("coprime number of N (default: -1, which means a random coprime number will be chosen)"),
+				mcp.DefaultString("0"),
+				mcp.Description("coprime number of N (default: 0, which means a random coprime number will be chosen)"),
 			),
 			mcp.WithString("seed",
 				mcp.Required(),

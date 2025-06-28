@@ -34,3 +34,9 @@ deploy:
 	gcloud artifacts docker images describe ${IMAGE}
 	gcloud run deploy --region ${REGION} --project ${PROJECT_ID} --image ${IMAGE} --set-env-vars=PROJECT_ID=${PROJECT_ID},TARGET_URL=${TARGET_URL} ${SERVICE_NAME}
 	gcloud run services update-traffic ${SERVICE_NAME} --to-latest --region ${REGION} --project ${PROJECT_ID}
+
+run:
+	PORT=3000 TARGET_URL=${TARGET_URL} IDENTITY_TOKEN=$(shell gcloud auth print-identity-token) go run main.go
+
+inspector:
+	npx @modelcontextprotocol/inspector
