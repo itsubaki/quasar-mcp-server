@@ -20,7 +20,7 @@
  1. Configure `settings.json`.
 
 ```shell
-$ make build deploy
+make build deploy
 ```
 
 ```json
@@ -39,7 +39,7 @@ $ make build deploy
 ## Invoke an Authenticated Cloud Run Service from localhost
 
 ```shell
-$ make proxy
+make proxy
 ...
 
 Proxying to Cloud Run service [quasar-mcp-server] in project [${PROJECT_ID}] region [asia-northeast1]
