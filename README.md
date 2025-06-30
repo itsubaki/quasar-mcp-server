@@ -40,10 +40,6 @@ make build deploy
 
 ```shell
 make proxy
-...
-
-Proxying to Cloud Run service [quasar-mcp-server] in project [${PROJECT_ID}] region [asia-northeast1]
-http://127.0.0.1:3000 proxies to https://${YOUR_CLOUD_RUN_URL}.run.app
 ```
 
 ```json
