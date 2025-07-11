@@ -199,7 +199,7 @@ func main() {
 				// success
 				return mcp.NewToolResultText(strings.Join([]string{
 					fmt.Sprintf("The prime factorization of %v is %v and %v.", resp.N, resp.P, resp.Q),
-					fmt.Sprintf("num of precision qubits=%v, coprime number of N=%v, PRNG seed=%v, measured bitstring=%v, s/r=%v.", resp.T, resp.A, resp.Seed, resp.M, resp.SR),
+					fmt.Sprintf("num of precision qubits=%v, coprime number of N=%v, PRNG seed=%v, measured bitstring=%v, s/r=%v/%v.", resp.T, resp.A, resp.Seed, resp.M, resp.S, resp.R),
 				}, "")), nil
 			}
 
