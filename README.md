@@ -9,10 +9,6 @@
 
 ![GitHub Copilot](copilot_run.png)
 
-### Factoring with Shor's Algorithm
-
-![GitHub Copilot](copilot_factorize.png)
-
 ## Deployment and Configuration
 
  1. Deploy [quasar](https://github.com/itsubaki/quasar) to Cloud Run.
