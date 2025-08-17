@@ -118,7 +118,7 @@ func main() {
 	s.AddResource(
 		mcp.NewResource(
 			lexerURL,
-			"openqasm3p0_lexer",
+			"openqasm3p0_lexer_grammar",
 			mcp.WithResourceDescription("The OpenQASM3.0 Lexer grammar"),
 			mcp.WithMIMEType("text"),
 		),
@@ -141,7 +141,7 @@ func main() {
 	s.AddResource(
 		mcp.NewResource(
 			parserURL,
-			"openqasm3p0_parser",
+			"openqasm3p0_parser_grammar",
 			mcp.WithResourceDescription("The OpenQASM3.0 Parser grammar"),
 			mcp.WithMIMEType("text"),
 		),
