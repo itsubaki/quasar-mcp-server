@@ -7,8 +7,6 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"strconv"
-	"strings"
 
 	"github.com/itsubaki/quasar/client"
 	"github.com/mark3labs/mcp-go/mcp"
@@ -114,101 +112,6 @@ func main() {
 			}
 
 			return mcp.NewToolResultText(string(bytes)), nil
-		},
-	)
-
-	s.AddTool(
-		mcp.NewTool("factorize",
-			mcp.WithDescription("factorize a number using shor's algorithm"),
-			mcp.WithString("N",
-				mcp.Required(),
-				mcp.Description("the number to factorize (string representation of an integer)"),
-			),
-			mcp.WithString("t",
-				mcp.Required(),
-				mcp.DefaultString("4"),
-				mcp.Description("number of precision qubits (default: 4)"),
-			),
-			mcp.WithString("a",
-				mcp.Required(),
-				mcp.DefaultString("0"),
-				mcp.Description("coprime number of N (default: 0, which means a random coprime number will be chosen)"),
-			),
-			mcp.WithString("seed",
-				mcp.Required(),
-				mcp.DefaultString("0"),
-				mcp.Description("PRNG seed (default: 0, which means a random seed will be chosen)"),
-			),
-		),
-		func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-			getParams := func(name ...string) (map[string]uint64, error) {
-				params := make(map[string]uint64)
-				for _, n := range name {
-					arg, ok := req.GetArguments()[n]
-					if !ok {
-						return nil, fmt.Errorf("missing required argument: %v", name)
-					}
-
-					str, ok := arg.(string)
-					if !ok {
-						return nil, fmt.Errorf("invalid type for %v(%T) argument", name, arg)
-					}
-
-					v, err := strconv.ParseUint(str, 10, 64)
-					if err != nil {
-						return nil, fmt.Errorf("convert %v to uint64: %w", name, err)
-					}
-
-					params[n] = v
-				}
-
-				return params, nil
-			}
-
-			// parameters
-			params, err := getParams("N", "t", "a", "seed")
-			if err != nil {
-				return nil, fmt.Errorf("get parameters: %w", err)
-			}
-
-			// client
-			client, err := newQuasarClient(ctx)
-			if err != nil {
-				return nil, fmt.Errorf("new client: %w", err)
-			}
-
-			N, t, a, seed := params["N"], min(params["t"], 4), params["a"], params["seed"]
-			for range 10 {
-				// factorization
-				resp, err := client.Factorize(ctx, N, &t, &a, &seed)
-				if err != nil {
-					return nil, fmt.Errorf("factorize: %w", err)
-				}
-
-				if resp.P == 0 || resp.Q == 0 {
-					// no factorization found
-					continue
-				}
-
-				// response
-				if resp.Message != nil {
-					// somthing went wrong
-					return mcp.NewToolResultText(*resp.Message), nil
-				}
-
-				// success
-				return mcp.NewToolResultText(strings.Join([]string{
-					fmt.Sprintf("The prime factorization of %v is %v and %v.", resp.N, resp.P, resp.Q),
-					fmt.Sprintf("num of precision qubits=%v, coprime number of N=%v, PRNG seed=%v, measured bitstring=%v, s/r=%v/%v.", resp.T, resp.A, resp.Seed, resp.M, resp.S, resp.R),
-				}, "")), nil
-			}
-
-			// failed
-			return mcp.NewToolResultText(strings.Join([]string{
-				"Unfortunately, the operation failed.",
-				"Because Shor's algorithm is probabilistic, this can occasionally happen.",
-				"Please try again.",
-			}, " ")), nil
 		},
 	)
 
