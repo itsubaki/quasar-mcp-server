@@ -1,6 +1,6 @@
 # quasar-mcp-server
 
- * quasar MCP Server  
+ * quasar MCP server  
  * Run code written in OpenQASM format 
 
 ## Examples
