@@ -3,7 +3,7 @@ module github.com/itsubaki/quasar-mcp-server
 go 1.24.2
 
 require (
-	github.com/itsubaki/quasar v0.0.0-20251107144614-90d01fa5aa8a
+	github.com/itsubaki/quasar v0.0.0-20251108104250-9b811d5b46e4
 	github.com/modelcontextprotocol/go-sdk v1.1.0
 	google.golang.org/api v0.255.0
 )
@@ -31,6 +31,7 @@ require (
 	golang.org/x/oauth2 v0.32.0 // indirect
 	golang.org/x/sys v0.37.0 // indirect
 	golang.org/x/text v0.30.0 // indirect
+	golang.org/x/tools v0.38.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251103181224-f26f9409b101 // indirect
 	google.golang.org/grpc v1.76.0 // indirect
 	google.golang.org/protobuf v1.36.10 // indirect
