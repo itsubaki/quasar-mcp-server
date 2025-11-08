@@ -1,11 +1,10 @@
 # quasar-mcp-server
 
- * quasar MCP server  
- * Run code written in OpenQASM format 
+- Run code written in OpenQASM 3.0 format 
 
 ## Examples
 
-### Running a Bell State Circuit with OpenQASM
+### Running a Bell State Circuit with OpenQASM 3.0
 
 ![GitHub Copilot](copilot_run.png)
 
