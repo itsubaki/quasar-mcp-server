@@ -39,4 +39,4 @@ run:
 	PORT=3000 TARGET_URL=${TARGET_URL} IDENTITY_TOKEN=$(shell gcloud auth print-identity-token) go run main.go
 
 inspector:
-	npx @modelcontextprotocol/inspector
+	npx @modelcontextprotocol/inspector --transport http --server-url http://localhost:3000/mcp
