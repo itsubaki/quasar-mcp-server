@@ -39,9 +39,12 @@ func NewMCPServer(identityToken, targetURL string) *mcp.Server {
 }
 
 func main() {
-	if err := http.ListenAndServe(addr, mcp.NewStreamableHTTPHandler(func(*http.Request) *mcp.Server {
-		return NewMCPServer(identityToken, targetURL)
-	}, nil)); err != nil {
+	s := NewMCPServer(identityToken, targetURL)
+	handler := mcp.NewStreamableHTTPHandler(func(*http.Request) *mcp.Server {
+		return s
+	}, nil)
+
+	if err := http.ListenAndServe(addr, handler); err != nil {
 		panic(err)
 	}
 }
