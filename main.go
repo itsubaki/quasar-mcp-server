@@ -6,8 +6,6 @@ import (
 	"os"
 
 	"github.com/itsubaki/quasar-mcp-server/quasar"
-	"github.com/itsubaki/quasar-mcp-server/quasar/resources"
-	"github.com/itsubaki/quasar-mcp-server/quasar/tools"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
@@ -24,22 +22,8 @@ var (
 	}()
 )
 
-func NewMCPServer(identityToken, targetURL string) *mcp.Server {
-	s := quasar.NewMCPServer()
-
-	// resources
-	s.AddResource(resources.NewLexer())
-	s.AddResource(resources.NewParser())
-
-	// tools
-	tool, handler := tools.NewOpenQASM3p0Run(identityToken, targetURL)
-	mcp.AddTool(s, tool, handler)
-
-	return s
-}
-
 func main() {
-	s := NewMCPServer(identityToken, targetURL)
+	s := quasar.NewMCPServer(identityToken, targetURL)
 	handler := mcp.NewStreamableHTTPHandler(func(*http.Request) *mcp.Server {
 		return s
 	}, nil)
