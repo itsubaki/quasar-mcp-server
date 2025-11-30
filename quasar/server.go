@@ -17,8 +17,14 @@ func NewMCPServer(identityToken, targetURL string) *mcp.Server {
 	s.AddResource(resources.NewParser())
 
 	// tools
-	tool, handler := tools.NewOpenQASM3p0Run(identityToken, targetURL)
-	mcp.AddTool(s, tool, handler)
+	run, runHandler := tools.NewOpenQASM3p0Run(identityToken, targetURL)
+	mcp.AddTool(s, run, runHandler)
+
+	share, shareHandler := tools.NewShare(identityToken, targetURL)
+	mcp.AddTool(s, share, shareHandler)
+
+	edit, editHandler := tools.NewEdit(identityToken, targetURL)
+	mcp.AddTool(s, edit, editHandler)
 
 	return s
 }
