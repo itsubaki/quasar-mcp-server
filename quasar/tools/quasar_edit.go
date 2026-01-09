@@ -23,8 +23,8 @@ func NewEdit(identityToken, targetURL string) (
 	mcp.ToolHandlerFor[*EditInput, *EditOutput],
 ) {
 	return &mcp.Tool{
-			Name:        "openqasm3p0_edit",
-			Description: "Edit a quantum circuit using OpenQASM 3.0",
+			Name:        "openqasm_edit",
+			Description: "Edit a quantum circuit using OpenQASM",
 		}, func(
 			ctx context.Context,
 			req *mcp.CallToolRequest,
