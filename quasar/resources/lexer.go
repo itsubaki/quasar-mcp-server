@@ -12,7 +12,7 @@ const lexerURL = "https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/mai
 func NewLexer() (*mcp.Resource, func(_ context.Context, _ *mcp.ReadResourceRequest) (*mcp.ReadResourceResult, error)) {
 	return &mcp.Resource{
 			Name:        "openqasm3_lexer_grammar",
-			Description: "The OpenQASM 3 Lexer grammar",
+			Description: "The OpenQASM 3.x Lexer grammar",
 			MIMEType:    "text",
 			URI:         lexerURL,
 		}, func(_ context.Context, _ *mcp.ReadResourceRequest) (*mcp.ReadResourceResult, error) {
