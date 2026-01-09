@@ -23,7 +23,7 @@ func NewShare(identityToken, targetURL string) (
 	mcp.ToolHandlerFor[*ShareInput, *ShareOutput],
 ) {
 	return &mcp.Tool{
-			Name:        "openqasm_share",
+			Name:        "openqasm3_share",
 			Description: "Share a quantum circuit using OpenQASM 3.x",
 		}, func(
 			ctx context.Context,
