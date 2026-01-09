@@ -12,7 +12,7 @@ const parserURL = "https://raw.githubusercontent.com/itsubaki/qasm/refs/heads/ma
 func NewParser() (*mcp.Resource, func(_ context.Context, _ *mcp.ReadResourceRequest) (*mcp.ReadResourceResult, error)) {
 	return &mcp.Resource{
 			Name:        "openqasm3_parser_grammar",
-			Description: "The OpenQASM 3 Parser grammar",
+			Description: "The OpenQASM 3.x Parser grammar",
 			MIMEType:    "text",
 			URI:         parserURL,
 		}, func(_ context.Context, _ *mcp.ReadResourceRequest) (*mcp.ReadResourceResult, error) {
