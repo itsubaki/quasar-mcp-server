@@ -20,7 +20,7 @@ func NewOpenQASM3p0Run(identityToken, targetURL string) (
 ) {
 	return &mcp.Tool{
 			Name:        "openqasm_run",
-			Description: "Run a quantum circuit using OpenQASM",
+			Description: "Run a quantum circuit using OpenQASM 3.x",
 		}, func(
 			ctx context.Context,
 			req *mcp.CallToolRequest,
