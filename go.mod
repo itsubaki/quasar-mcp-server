@@ -3,7 +3,7 @@ module github.com/itsubaki/quasar-mcp-server
 go 1.25.6
 
 require (
-	github.com/itsubaki/quasar v0.0.0-20260228042414-3f5493c2551d
+	github.com/itsubaki/quasar v0.0.0-20260301131902-ce3c007b7f3f
 	github.com/modelcontextprotocol/go-sdk v1.4.0
 	google.golang.org/api v0.269.0
 )
