@@ -12,7 +12,7 @@ func ExampleHttpGet() {
 		panic(err)
 	}
 
-	fmt.Println(string(bytes)[:23])
+	fmt.Println(string(bytes)[:22])
 
 	// Output:
 	// <!DOCTYPE html>
