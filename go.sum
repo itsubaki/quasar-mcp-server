@@ -33,8 +33,8 @@ github.com/googleapis/enterprise-certificate-proxy v0.3.14 h1:yh8ncqsbUY4shRD5dA
 github.com/googleapis/enterprise-certificate-proxy v0.3.14/go.mod h1:vqVt9yG9480NtzREnTlmGSBmFrA+bzb0yl0TxoBQXOg=
 github.com/googleapis/gax-go/v2 v2.21.0 h1:h45NjjzEO3faG9Lg/cFrBh2PgegVVgzqKzuZl/wMbiI=
 github.com/googleapis/gax-go/v2 v2.21.0/go.mod h1:But/NJU6TnZsrLai/xBAQLLz+Hc7fHZJt/hsCz3Fih4=
-github.com/itsubaki/quasar v0.0.0-20260401115759-12dc7b5be0d5 h1:Ag/44EvvCWSWoZQ7EXAbJ/j42PeH4pQSsra88GQNcvQ=
-github.com/itsubaki/quasar v0.0.0-20260401115759-12dc7b5be0d5/go.mod h1:MpMiOR/je0RkMLjesVYSvVE0b3tFFcB0/Iz7BO0lr7E=
+github.com/itsubaki/quasar v0.0.0-20260405051519-5482826ed9a5 h1:iOohManzrZdUAg3Itj4ee86XLZLYSsYvKAwhBgmdYTA=
+github.com/itsubaki/quasar v0.0.0-20260405051519-5482826ed9a5/go.mod h1:wMZxrjmV6dd/nSZ4laCOHP7nBlMDV6UyKzwnM6j1rIo=
 github.com/modelcontextprotocol/go-sdk v1.4.1 h1:M4x9GyIPj+HoIlHNGpK2hq5o3BFhC+78PkEaldQRphc=
 github.com/modelcontextprotocol/go-sdk v1.4.1/go.mod h1:Bo/mS87hPQqHSRkMv4dQq1XCu6zv4INdXnFZabkNU6s=
 github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 h1:Jamvg5psRIccs7FGNTlIRMkT8wgtp5eCXdBlqhYGL6U=
