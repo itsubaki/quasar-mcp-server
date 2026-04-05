@@ -4,10 +4,15 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
+var HTTPClient = &http.Client{
+	Timeout: 10 * time.Second,
+}
+
 func HttpGet(url string) ([]byte, error) {
-	resp, err := http.Get(url)
+	resp, err := HTTPClient.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("get: %w", err)
 	}
