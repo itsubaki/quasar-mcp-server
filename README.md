@@ -4,7 +4,7 @@
 
 ## Examples
 
-### Running a Bell State Circuit with OpenQASM 3.x
+### Running a Bell State Circuit with OpenQASM
 
 ![GitHub Copilot](copilot_run.png)
 
