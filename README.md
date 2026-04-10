@@ -1,6 +1,6 @@
 # quasar-mcp-server
 
-- An MCP server that runs code written in **OpenQASM 3.x** format
+- An MCP server that runs code written in **OpenQASM 3.x**
 
 ## Examples
 
