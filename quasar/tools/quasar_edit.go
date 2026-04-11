@@ -14,7 +14,7 @@ type EditInput struct {
 
 type EditOutput struct {
 	ID        string    `json:"id" jsonschema:"unique identifier for the shared circuit"`
-	Code      string    `json:"code" jsonschema:"quantum circuit in OpenQASM 3.0 format"`
+	Code      string    `json:"code" jsonschema:"quantum circuit in OpenQASM format"`
 	CreatedAt time.Time `json:"created_at" jsonschema:"timestamp when the circuit was shared"`
 }
 

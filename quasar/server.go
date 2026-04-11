@@ -26,5 +26,8 @@ func NewMCPServer(identityToken, targetURL string) *mcp.Server {
 	edit, editHandler := tools.NewEdit(identityToken, targetURL)
 	mcp.AddTool(s, edit, editHandler)
 
+	validate, validateHandler := tools.NewValidate(identityToken, targetURL)
+	mcp.AddTool(s, validate, validateHandler)
+
 	return s
 }

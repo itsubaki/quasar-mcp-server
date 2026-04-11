@@ -9,7 +9,7 @@ import (
 )
 
 type RunInput struct {
-	Code string `json:"code" jsonschema:"quantum circuit in OpenQASM 3.0 format"`
+	Code string `json:"code" jsonschema:"quantum circuit in OpenQASM format"`
 }
 
 type RunOutput client.States
