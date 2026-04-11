@@ -23,7 +23,6 @@ make build deploy
     "mcp": {
         "servers": {
             "quasar": {
-                "type": "http",
                 "url": "https://${YOUR_CLOUD_RUN_SERVICE_URL}.run.app/mcp"
             }
         }
@@ -42,7 +41,6 @@ make proxy
     "mcp": {
         "servers": {
             "quasar": {
-                "type": "http",
                 "url": "http://127.0.0.1:3000/mcp"
             }
         }
