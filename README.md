@@ -2,12 +2,6 @@
 
 - An MCP server for running OpenQASM code
 
-## Examples
-
-### Running a Bell State Circuit with OpenQASM code
-
-![GitHub Copilot](copilot_run.png)
-
 ## Deployment and Configuration
 
  1. Deploy [quasar](https://github.com/itsubaki/quasar) to Cloud Run.
