@@ -8,26 +8,26 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-type RunInput struct {
+type SimulateInput struct {
 	Code string `json:"code" jsonschema:"quantum circuit in OpenQASM format"`
 }
 
-type RunOutput client.States
+type SimulateOutput client.States
 
-func NewRun(identityToken, targetURL string) (
+func NewSimulate(identityToken, targetURL string) (
 	*mcp.Tool,
-	mcp.ToolHandlerFor[*RunInput, *RunOutput],
+	mcp.ToolHandlerFor[*SimulateInput, *SimulateOutput],
 ) {
 	return &mcp.Tool{
-			Name:        "openqasm_run",
-			Description: "Run a quantum circuit using OpenQASM",
+			Name:        "openqasm_simulate",
+			Description: "Simulate a quantum circuit using OpenQASM",
 		}, func(
 			ctx context.Context,
 			req *mcp.CallToolRequest,
-			input *RunInput,
+			input *SimulateInput,
 		) (
 			*mcp.CallToolResult,
-			*RunOutput,
+			*SimulateOutput,
 			error,
 		) {
 			client, err := NewQuasarClient(ctx, identityToken, targetURL)
@@ -40,7 +40,7 @@ func NewRun(identityToken, targetURL string) (
 				return nil, nil, fmt.Errorf("simulate: %w", err)
 			}
 
-			out := RunOutput(*resp)
+			out := SimulateOutput(*resp)
 			return nil, &out, nil
 		}
 }

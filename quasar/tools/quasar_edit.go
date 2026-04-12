@@ -41,7 +41,7 @@ func NewEdit(identityToken, targetURL string) (
 
 			resp, err := client.Edit(ctx, input.ID)
 			if err != nil {
-				return nil, nil, fmt.Errorf("share: %w", err)
+				return nil, nil, fmt.Errorf("edit: %w", err)
 			}
 
 			return nil, &EditOutput{

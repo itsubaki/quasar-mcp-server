@@ -17,8 +17,8 @@ func NewMCPServer(identityToken, targetURL string) *mcp.Server {
 	s.AddResource(resources.NewParser())
 
 	// tools
-	run, runHandler := tools.NewRun(identityToken, targetURL)
-	mcp.AddTool(s, run, runHandler)
+	simulate, simulateHandler := tools.NewSimulate(identityToken, targetURL)
+	mcp.AddTool(s, simulate, simulateHandler)
 
 	share, shareHandler := tools.NewShare(identityToken, targetURL)
 	mcp.AddTool(s, share, shareHandler)
