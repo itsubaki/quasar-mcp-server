@@ -1,6 +1,6 @@
 # quasar-mcp-server
 
-An MCP server for running OpenQASM code
+An MCP server for running OpenQASM code.
 
 ## Deployment and Configuration
 
