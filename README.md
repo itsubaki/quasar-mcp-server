@@ -1,7 +1,5 @@
 # quasar-mcp-server
 
-An MCP server for OpenQASM.
-
 ## Deployment and Configuration
 
  1. Deploy [quasar](https://github.com/itsubaki/quasar) to Cloud Run.
